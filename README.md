@@ -10,7 +10,7 @@ This gateway replaces the cloud-dependent Tuya WG02 Wi-Fi gateway and talks dire
 > ### ⚠️ Hardware Scope & Testing Disclaimer (Please Read First)
 > * **Strictly Tested Hardware**: This entire repository, firmware, and custom C++ components have been **tried and tested ONLY on the physical Haozee Dual Bluetooth Water Timer** (2-valve model, Tuya Product ID `qycalacn`).
 > * **Speculative Configurations**: Any provided templates, packages, or documentation for **1-valve, 3-valve, and 4-valve models are ENTIRELY SPECULATIVE**, derived from OEM specifications and community documentation. The maintainer does not own or test these variants.
-> * **Applicability to Other Radios (RF / 433 MHz / Zigbee)**: The reverse-engineered Data Point (DP) structures, valve timing logic, and state management in this repo may serve as a valuable reference if you are building solutions for other communication technologies (such as 433 MHz / Sub-1GHz RF, HomGar gateways, or Zigbee). When adapting this architecture to other communication stacks or hardware platforms, **you are encouraged to fork this repository** and tailor the transport layer to your specific use case.
+> * **Applicability to Other Radios (RF / 433 MHz / Zigbee) & Attribution**: The reverse-engineered Data Point (DP) structures used throughout this project were originally analyzed and documented by **[Technerd-SG/hassio-diivoo2mqtt](https://github.com/Technerd-SG/hassio-diivoo2mqtt)**, built upon the ESPHome custom BLE component foundation from **[pcr20/esphome-tuya-ble](https://github.com/pcr20/esphome-tuya-ble)**. These DP mappings and protocol insights provide a valuable reference if you are developing solutions for other communication technologies (such as 433 MHz / Sub-1GHz RF, HomGar gateways, or Zigbee). When adapting this work to other communication stacks or hardware platforms, **you are strongly encouraged to fork this repository** and adapt the transport layer for your specific use case.
 
 ---
 
@@ -211,7 +211,7 @@ inline uint16_t tuya_crc16(const uint8_t *data, size_t length) {
   * This guarantees **independent 1-second accuracy** for both valves regardless of whether they are actuated from Home Assistant, automated schedules, or physical buttons.
 ## 5. Data Point (DP) Mapping
 
-From the cloud device schema query for `qycalacn`:
+> **Credit & Prior Art**: The reverse engineering and functional identification of these Tuya Data Points was originally achieved by **[Technerd-SG/hassio-diivoo2mqtt](https://github.com/Technerd-SG/hassio-diivoo2mqtt)**, and cross-verified via cloud device schema queries for `qycalacn`:
 
 | DP ID | Hex | Type | Name in Cloud | Function in ESPHome |
 |---|---|---|---|---|

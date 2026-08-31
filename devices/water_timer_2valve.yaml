@@ -1,6 +1,7 @@
 # ==============================================================================
 # ESPHome Package: 2-Valve Tuya BLE Water Timer
 # Supported Models: Haozee Dual, Diivoo WT-05, Diivoo WT-05W, SGW08MB, IHOMECAM
+# Note: DP mappings originally reverse-engineered by Technerd-SG/hassio-diivoo2mqtt
 # ==============================================================================
 
 substitutions:
