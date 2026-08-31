@@ -15,6 +15,7 @@ This gateway replaces the cloud-dependent Tuya WG02 Wi-Fi gateway and talks dire
 6. [ESPHome Custom Components & Architecture](#6-esphome-custom-components--architecture)
 7. [Complete ESPHome Configuration](#7-complete-esphome-configuration)
 8. [Home Assistant Entity Reference](#8-home-assistant-entity-reference)
+9. [Acknowledgments, Prior Art & License](#9-acknowledgments-prior-art--license)
 
 ---
 
@@ -509,3 +510,18 @@ Once the ESP32-C3 is connected to Home Assistant, the following entities are exp
 | `sensor.living_room_ble_water_timer_gateway_last_run_time_valve_1` | **Last Run Time Valve 1** | Duration of last irrigation cycle 1 (s) |
 | `sensor.living_room_ble_water_timer_gateway_last_run_time_valve_2` | **Last Run Time Valve 2** | Duration of last irrigation cycle 2 (s) |
 | `sensor.living_room_ble_water_timer_gateway_gateway_ip_address` | **Gateway IP Address** | ESP32-C3 Wi-Fi IP address |
+
+---
+
+## 9. Acknowledgments, Prior Art & License
+
+### Prior Art & Credits
+* **[pcr20/esphome-tuya-ble](https://github.com/pcr20/esphome-tuya-ble)**: Provided the base ESPHome custom component structure (`tuya_ble_tracker`, `tuya_ble_client`, `tuya_ble_node`).
+* **[Technerd-SG/hassio-diivoo2mqtt](https://github.com/Technerd-SG/hassio-diivoo2mqtt)**: Provided the foundational reverse engineering insights, Tuya 6-byte key derivation analysis, and Data Point (DP) mappings for the Diivoo Dual Water Timer (`qycalacn` / `diivoo_wt05`).
+
+### License
+This project is licensed under the standard ESPHome dual-license model:
+* **GNU General Public License v3.0 (GPLv3)** for all C++ runtime files (`.cpp`, `.h`).
+* **MIT License** for Python scripts, configurations, and documentation.
+
+See the [LICENSE](LICENSE) file for complete terms and third-party notices.
