@@ -6,17 +6,26 @@ This gateway replaces the cloud-dependent Tuya WG02 Wi-Fi gateway and talks dire
 
 ---
 
+> [!IMPORTANT]
+> ### ⚠️ Hardware Scope & Testing Disclaimer (Please Read First)
+> * **Strictly Tested Hardware**: This entire repository, firmware, and custom C++ components have been **tried and tested ONLY on the physical Haozee Dual Bluetooth Water Timer** (2-valve model, Tuya Product ID `qycalacn`).
+> * **Speculative Configurations**: Any provided templates, packages, or documentation for **1-valve, 3-valve, and 4-valve models are ENTIRELY SPECULATIVE**, derived from OEM specifications and community documentation. The maintainer does not own or test these variants.
+> * **Applicability to Other Radios (RF / 433 MHz / Zigbee)**: The reverse-engineered Data Point (DP) structures, valve timing logic, and state management in this repo may serve as a valuable reference if you are building solutions for other communication technologies (such as 433 MHz / Sub-1GHz RF, HomGar gateways, or Zigbee). When adapting this architecture to other communication stacks or hardware platforms, **you are encouraged to fork this repository** and tailor the transport layer to your specific use case.
+
+---
+
 ## Table of Contents
 1. [Why This Was Built (The Architecture Problem)](#1-why-this-was-built-the-architecture-problem)
 2. [Hardware Overview & Pinout](#2-hardware-overview--pinout)
 3. [Step-by-Step: Extracting Keys from Tuya Cloud](#3-step-by-step-extracting-keys-from-tuya-cloud)
 4. [Tuya BLE Protocol & Technical Fixes](#4-tuya-ble-protocol--technical-fixes)
 5. [Data Point (DP) Mapping](#5-data-point-dp-mapping)
-6. [ESPHome Custom Components & Architecture](#6-esphome-custom-components--architecture)
-7. [Complete ESPHome Configuration](#7-complete-esphome-configuration)
-8. [Home Assistant Entity Reference](#8-home-assistant-entity-reference)
-9. [Acknowledgments, Prior Art & License](#9-acknowledgments-prior-art--license)
-
+6. [ESPHome Custom Components & Modular Packages](#6-esphome-custom-components--modular-packages)
+7. [Device Compatibility & Support Tiers](#7-device-compatibility--support-tiers)
+8. [Complete ESPHome Configuration](#8-complete-esphome-configuration)
+9. [Home Assistant Entity Reference](#9-home-assistant-entity-reference)
+10. [Community Contributions & Requesting New Devices](#10-community-contributions--requesting-new-devices)
+11. [Acknowledgments, Prior Art & License](#11-acknowledgments-prior-art--license)
 ---
 
 ## 1. Why This Was Built (The Architecture Problem)
@@ -217,8 +226,9 @@ From the cloud device schema query for `qycalacn`:
 
 ---
 
-## 6. ESPHome Custom Components & Architecture
+## 6. ESPHome Custom Components & Modular Packages
 
+### C++ Custom Components Architecture
 The custom C++ components are located in the `components/` directory:
 
 ```
@@ -234,7 +244,7 @@ components/
 └── tuya_ble_node/          # Device instance, DP dispatcher, switch & sensor platforms
     ├── tuya_ble_node.h
     ├── tuya_ble_node.cpp
-    ├── switch/             # ESPHome Switch entity (Valve 1 / Valve 2)
+    ├── switch/             # ESPHome Switch entity (Valve 1 / Valve 2 / Valve 3 / Valve 4)
     │   ├── __init__.py
     │   └── tuya_ble_switch.h
     ├── sensor/             # ESPHome Sensor entity (Battery, Durations)
@@ -245,9 +255,44 @@ components/
         └── tuya_ble_binary_sensor.h
 ```
 
+### Ready-Made Device Packages (`devices/`)
+To simplify configuration and eliminate copy-pasting, pre-configured ESPHome packages are provided in the `devices/` folder:
+
+* **`devices/water_timer_1valve.yaml`**: Single-valve timers (e.g., Diivoo WT-03 / WT-03W).
+* **`devices/water_timer_2valve.yaml`**: Dual-valve timers (e.g., Haozee Dual, Diivoo WT-05 / WT-05W, SGW08MB).
+* **`devices/water_timer_3valve.yaml`**: 3-valve timers (e.g., Diivoo 3-Zone Smart Timer).
+* **`devices/water_timer_4valve.yaml`**: 4-valve timers (e.g., Diivoo WT-06, XinFuture 4-Zone, Nous L11).
+
+You can import any package directly into your gateway YAML using ESPHome's native `packages:` feature:
+
+```yaml
+packages:
+  timer: !include devices/water_timer_2valve.yaml
+```
+
 ---
 
-## 7. Complete ESPHome Configuration
+## 7. Device Compatibility & Support Tiers
+
+See the full matrix in [WG02_Bluetooth_Compatibility.csv](WG02_Bluetooth_Compatibility.csv).
+
+### Support Tiers
+* **Tier 1: Confirmed & Actively Tested on Hardware**
+  * **Haozee Dual Bluetooth Water Timer (`qycalacn`)**: Primary reference device. 100% verified locally for two-way valve actuation, runtime calculation, battery telemetry, and continuous RSSI.
+* **Tier 2: Speculative OEM Irrigation Profiles (Community Feedback Needed)**
+  * **Diivoo WT-05 / WT-05W / SGW08MB (2-Zone)**: Documented to share the exact same OEM hardware platform and DP specification as Haozee.
+  * **Diivoo WT-03 / WT-03W (1-Zone)**: Speculative profile for the single-solenoid variant.
+  * **Diivoo 3-Zone & 4-Zone (WT-06, XinFuture, Eshico, Nous L11)**: Speculative profiles for multi-valve manifold controllers using standard Tuya BLE boolean DPs.
+* **Tier 3: Experimental / PR Submissions**
+  * **Diivoo ITH-02 / Xiaoyi Soil & Climate Sensors**: Temperature/moisture data points.
+* **Incompatible / Out of Scope**:
+  * **Diivoo HomGar / RF Timers (e.g., WT-07W / WT-13W with HomGar Hub)**: Uses proprietary 433MHz/RF protocol, not Tuya BLE.
+  * **Tuya BLE Smart Locks**: Requires dynamic ECDH pairing and cloud token verification.
+  * **Xiaomi / Govee BLE devices**: Non-Tuya proprietary protocols.
+
+---
+
+## 8. Complete ESPHome Configuration
 
 File: `local_BLE_water_timer.yaml`
 
@@ -513,7 +558,7 @@ text_sensor:
 
 ---
 
-## 8. Home Assistant Entity Reference
+## 9. Home Assistant Entity Reference
 
 Once the ESP32-C3 is connected to Home Assistant, the following entities are exposed under the device **`BLE Water Timer Gateway`**:
 
@@ -531,7 +576,25 @@ Once the ESP32-C3 is connected to Home Assistant, the following entities are exp
 
 ---
 
-## 9. Acknowledgments, Prior Art & License
+## 10. Community Contributions & Requesting New Devices
+
+Because we cannot purchase or physically test every model on the market, support for new water timers is **community-driven via Data Point (DP) dumps**.
+
+If you have a Tuya BLE water timer that is not yet mapped:
+1. Extract your device's specification JSON using `tinytuya`:
+   ```bash
+   uv run --with tinytuya python3 -c '
+   import tinytuya, json
+   c = tinytuya.Cloud(apiRegion="eu", apiKey="YOUR_KEY", apiSecret="YOUR_SECRET", apiDeviceID="YOUR_DEVICE_ID")
+   print(json.dumps(c.cloudrequest("/v1.1/devices/YOUR_DEVICE_ID/specifications"), indent=2))
+   '
+   ```
+2. Open an issue using the [New Device Support Request](.github/ISSUE_TEMPLATE/device_support_request.yml) template.
+3. With the DP dump, a package profile can be generated in minutes and verified by you on your hardware!
+
+---
+
+## 11. Acknowledgments, Prior Art & License
 
 ### Prior Art & Credits
 * **[pcr20/esphome-tuya-ble](https://github.com/pcr20/esphome-tuya-ble)**: Provided the base ESPHome custom component structure (`tuya_ble_tracker`, `tuya_ble_client`, `tuya_ble_node`).

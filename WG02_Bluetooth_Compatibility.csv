@@ -5,6 +5,10 @@ Diivoo,WT-03/WG02,Watering / irrigation,1-zone,WG02,Confirmed,Explicit WG02 vari
 Diivoo,WT-03W,Watering / irrigation,1-zone,WG02,Confirmed,Documentation associates timer with WG02,Bluetooth
 Diivoo,WT-05,Watering / irrigation,2-zone,WG02,Confirmed,Documented Bluetooth 2-zone timer family,Bluetooth
 Diivoo,WT-05W/WG02,Watering / irrigation,2-zone,WG02,Confirmed,Explicit WG02 variant,Bluetooth
+Diivoo,3-Zone Smart Irrigation Timer,Watering / irrigation,3-zone,WG02,Confirmed,Tuya BLE multi-zone family; manual/app associates with WG02,Bluetooth
+Diivoo,WT-06 / 4-Zone Smart Timer,Watering / irrigation,4-zone,WG02,Confirmed,Documented 4-zone Tuya BLE timer variant,Bluetooth
+XinFuture / Eshico / QOTO,4-Zone Tuya BLE Water Timer,Watering / irrigation,4-zone,WG02,Confirmed,Standard Tuya BLE 4-valve manifold controller,Bluetooth
+Johouse / Nous,L11 / Multi-Zone BLE Sprinkler,Watering / irrigation,4-zone,WG02,High confidence,Tuya BLE multi-zone irrigation platform,Bluetooth
 Tuya,SGW08MB,Watering / irrigation,2-zone,WG02,Confirmed,Documentation explicitly identifies WG02 gateway,Bluetooth
 IHOMECAM,SGW08MB,Watering / irrigation,2-zone,WG02,Confirmed,Same documented SGW08MB platform,Bluetooth
 Diivoo,ITH-02,Temperature / humidity sensor,N/A,WG02,Confirmed,Manual explicitly describes ITH-02 with WG02,Bluetooth
@@ -13,6 +17,8 @@ Xiaoyi / Inhocon,BLE electronic locks,Smart lock,N/A,WG02,High confidence,WG02 m
 Xiaoyi / Inhocon,Compatible BLE water timers,Watering / irrigation,Various,WG02,Likely,Manufacturer product ecosystem; exact model required,Bluetooth
 OEM / rebrand,SGW08MB-compatible water timers,Watering / irrigation,2-zone,WG02,Likely,Likely rebrands of documented SGW08MB hardware; exact model required,Bluetooth
 OEM / rebrand,Diivoo WT-03-compatible timers,Watering / irrigation,1-zone,WG02,Likely,Likely rebrands of documented hardware; exact model required,Bluetooth
+OEM / rebrand,3-Zone Tuya BLE timers,Watering / irrigation,3-zone,WG02,Likely,Multi-zone Tuya BLE firmware; exact DP mapping required,Bluetooth
+OEM / rebrand,4-Zone Tuya BLE timers,Watering / irrigation,4-zone,WG02,Likely,Multi-zone Tuya BLE firmware; exact DP mapping required,Bluetooth
 OEM / rebrand,Diivoo WT-05-compatible timers,Watering / irrigation,2-zone,WG02,Likely,Likely rebrands of documented hardware; exact model required,Bluetooth
 OEM / rebrand,Compatible Xiaoyi/Inhocon soil sensors,Soil monitoring,Various,WG02,Likely,Exact model required,Bluetooth
 OEM / rebrand,Compatible BLE smart/fingerprint locks,Smart lock,Various,WG02,Likely,Exact Tuya BLE gateway profile required,Bluetooth
@@ -28,3 +34,4 @@ Various,Tuya BLE smart plugs,Smart plug,Various,WG02,Not established,No sufficie
 Xiaomi / Mijia,BLE sensors,Various,Various,WG02,Not established,Not automatically compatible with Tuya WG02,Bluetooth
 Govee,BLE sensors,Various,Various,WG02,Not established,Not automatically compatible with Tuya WG02,Bluetooth
 Generic,Arbitrary BLE devices,Various,Various,WG02,Not compatible by default,WG02 is not a generic BLE-to-Wi-Fi bridge,Bluetooth
+Diivoo,WT-07W / HomGar RF Series,Watering / irrigation,Various,HomGar / WG03,Incompatible,Uses proprietary HomGar / RF protocol (not Tuya BLE),Proprietary RF / HomGar

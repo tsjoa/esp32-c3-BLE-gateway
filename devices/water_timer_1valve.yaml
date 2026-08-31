@@ -1,0 +1,93 @@
+# ==============================================================================
+# ESPHome Package: 1-Valve Tuya BLE Water Timer [SPECULATIVE / UNTESTED]
+# Potential Models: Diivoo WT-03, Diivoo WT-03W, and 1-Zone Tuya BLE Rebrands
+# Note: Speculative DP mapping. Untested on physical hardware by repo author.
+# ==============================================================================
+
+substitutions:
+  timer_mac: ""
+  timer_local_key: ""
+  timer_device_id: ""
+  timer_uuid: ""
+  tuya_client_id: "tuya_client"
+  timer_node_id: "water_timer"
+  valve_1_name: "Valve"
+  valve_1_dp: "1"        # Check device spec: some models use DP 1, others use DP 105
+  battery_dp: "11"       # Battery percentage DP
+
+tuya_ble_node:
+  - id: ${timer_node_id}
+    mac_address: ${timer_mac}
+    local_key: ${timer_local_key}
+    device_id: ${timer_device_id}
+    uuid: ${timer_uuid}
+    tuya_ble_client_id: ${tuya_client_id}
+
+globals:
+  - id: v1_start_ms
+    type: uint32_t
+    initial_value: '0'
+
+switch:
+  - platform: tuya_ble_node
+    tuya_ble_node_id: ${timer_node_id}
+    dp_id: ${valve_1_dp}
+    name: ${valve_1_name}
+    id: valve_1
+    icon: mdi:sprinkler
+    on_turn_on:
+      - lambda: |-
+          id(v1_start_ms) = esphome::millis();
+    on_turn_off:
+      - lambda: |-
+          if (id(v1_start_ms) > 0) {
+            uint32_t elapsed = (esphome::millis() - id(v1_start_ms)) / 1000;
+            if (elapsed > 0) {
+              id(last_run_1).publish_state((float)elapsed);
+            }
+            id(v1_start_ms) = 0;
+          }
+
+binary_sensor:
+  - platform: tuya_ble_node
+    tuya_ble_node_id: ${timer_node_id}
+    name: "Water Timer Connected"
+    id: timer_connected
+    device_class: connectivity
+
+sensor:
+  - platform: tuya_ble_node
+    tuya_ble_node_id: ${timer_node_id}
+    dp_id: ${battery_dp}
+    name: "Water Timer Battery"
+    id: timer_battery
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    device_class: battery
+    state_class: measurement
+    icon: mdi:battery
+
+  - platform: template
+    name: "Last Run Time ${valve_1_name}"
+    id: last_run_1
+    unit_of_measurement: "s"
+    accuracy_decimals: 0
+    device_class: duration
+    state_class: measurement
+    icon: mdi:timer-outline
+
+  - platform: template
+    name: "Water Timer Signal Strength"
+    id: timer_rssi
+    unit_of_measurement: "dBm"
+    accuracy_decimals: 0
+    device_class: signal_strength
+    state_class: measurement
+    icon: mdi:bluetooth-audio
+    lambda: |-
+      int r = id(${timer_node_id}).get_rssi();
+      if (r < 0 && r > -120) {
+        return (float)r;
+      }
+      return {};
+    update_interval: 3s

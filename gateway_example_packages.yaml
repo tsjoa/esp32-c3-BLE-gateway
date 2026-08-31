@@ -1,0 +1,72 @@
+# ==============================================================================
+# ESP32-C3 Tuya BLE Gateway Example (Using Modular Device Packages)
+# ==============================================================================
+
+substitutions:
+  device_name: ble-water-timer-gateway
+  friendly_name: "BLE Water Timer Gateway"
+  # Substitute your device credentials here or via secrets.yaml:
+  timer_mac: !secret water_timer_mac
+  timer_local_key: !secret water_timer_local_key
+  timer_device_id: !secret water_timer_device_id
+  timer_uuid: !secret water_timer_uuid
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  level: DEBUG
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "BLE-Water-Timer Fallback"
+    password: !secret ap_password
+
+captive_portal:
+
+# Load custom C++ BLE components locally or from GitHub
+external_components:
+  - source: components
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 320ms
+    window: 300ms
+    active: true
+
+tuya_ble_tracker:
+
+tuya_ble_client:
+  - id: tuya_client
+
+# ==============================================================================
+# Select your device profile by uncommenting the appropriate package:
+# ==============================================================================
+packages:
+  # Option A: Single Valve (Diivoo WT-03)
+  # timer: !include devices/water_timer_1valve.yaml
+
+  # Option B: Dual Valve (Haozee Dual, Diivoo WT-05, SGW08MB)
+  timer: !include devices/water_timer_2valve.yaml
+
+  # Option C: 3-Valve (Diivoo 3-Zone)
+  # timer: !include devices/water_timer_3valve.yaml
+
+  # Option D: 4-Valve (Diivoo WT-06, XinFuture, Nous L11)
+  # timer: !include devices/water_timer_4valve.yaml
