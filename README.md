@@ -60,9 +60,16 @@ By running the entire **Tuya BLE cryptographic stack directly on the ESP32-C3 in
 
 ## 2. Hardware Overview & Pinout
 
-### ESP32-C3 Super Mini with 0.42" OLED:
+### ESP32-C3 Super Mini with 0.42" OLED (New Gateway):
+
+<p align="center">
+  <img src="ESP32-c3-BLE-Gateway_with_paperclip_antenna.jpg" alt="ESP32-C3 BLE Gateway with OLED Display" width="450">
+</p>
+
+> **Note on the Display:** The 0.42" OLED display is completely optional and is **not required** to build a fully functional, reliable gateway. The ESP32-C3 can run entirely headless, communicating all states, battery telemetry, link RSSI, and valve controls directly to Home Assistant over Wi-Fi.
+
 * **SoC**: Espressif ESP32-C3 (RISC-V single-core @ 160MHz, BLE 5.0, Wi-Fi 4)
-* **Display**: 0.42" Monochrome OLED (72x40 pixels, SSD1306 driver)
+* **Display (Optional)**: 0.42" Monochrome OLED (72x40 pixels, SSD1306 driver)
 * **Pinout**:
   * `I2C SDA`: **`GPIO5`**
   * `I2C SCL`: **`GPIO6`**
@@ -70,9 +77,20 @@ By running the entire **Tuya BLE cryptographic stack directly on the ESP32-C3 in
   * `BOOT Button`: **`GPIO9`** (Active Low with internal pull-up)
   * `ESPHome Display Model`: `SSD1306 72x40`
 
+---
+
 ### Stock Gateway Reference (WG02):
 The original white/black plug-in Tuya WG02 gateway contains a **Tuya CR3L module** (Realtek Ameba RTL8720 Wi-Fi/BLE combo SoC). This gateway can be completely unplugged and removed once the ESP32-C3 gateway is deployed.
 
+#### Original WG02 Housing:
+| Front View | EU Plug View |
+|:---:|:---:|
+| <img src="WG02%20gateway%20front.jpg" alt="WG02 Gateway Front" width="350"> | <img src="WG02%20gateway%20EU%20version.jpg" alt="WG02 Gateway EU Version" width="350"> |
+
+#### Original WG02 Internal PCB Teardown:
+| PCB Front (Tuya CR3L Module) | PCB Rear |
+|:---:|:---:|
+| <img src="WG02%20gateway%20pcb%20front.jpg" alt="WG02 PCB Front" width="350"> | <img src="WG02%20gateway%20pcb%20rear.jpg" alt="WG02 PCB Rear" width="350"> |
 ---
 
 ## 3. Step-by-Step: Extracting Keys from Tuya Cloud
